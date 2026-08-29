@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAR3 GOLF CLUB | 파3 골프클럽 예약</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="header" id="header">
+  <div class="header-inner">
+    <button class="hamburger" id="hamburgerBtn" aria-label="메뉴 열기">
+      <span></span><span></span><span></span>
+    </button>
+
+    <a href="#top" class="logo">
+      <span class="logo-main">Par<em>3</em></span>
+      <span class="logo-sub">GOLF CLUB</span>
+    </a>
+
+    <nav class="nav" id="mainNav">
+      <a href="#course">코스안내</a>
+      <a href="#reserve">예약안내</a>
+      <a href="#location">오시는길</a>
+    </nav>
+
+    <a href="#reserve" class="btn btn-outline header-cta">예약하기</a>
+  </div>
+</header>
+
+<!-- Mobile Nav Overlay -->
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" id="mobileNavClose" aria-label="메뉴 닫기">&times;</button>
+  <nav>
+    <a href="#course">코스안내</a>
+    <a href="#reserve">예약안내</a>
+    <a href="#location">오시는길</a>
+  </nav>
+</div>
+
+<!-- Hero -->
+<section class="hero" id="top">
+  <div class="hero-slides" id="heroSlides">
+    <div class="hero-slide is-active" style="background-image:url('https://images.unsplash.com/photo-1592919505780-303950717480?q=80&w=1920&auto=format&fit=crop')"></div>
+    <div class="hero-slide" style="background-image:url('https://loremflickr.com/1920/1080/golfcourse?lock=201')"></div>
+    <div class="hero-slide" style="background-image:url('https://loremflickr.com/1920/1080/golfcourse?lock=202')"></div>
+  </div>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">SHORT GAME, LONG JOY</p>
+    <h1 class="hero-title">A PERFECT<br>SWING<span class="hero-and">and</span>MOMENT</h1>
+    <p class="hero-desc">짧지만 완벽한 하루, 파3의 즐거움</p>
+    <div class="hero-actions">
+      <a href="#reserve" class="btn btn-solid">예약하기</a>
+      <a href="#course" class="btn btn-ghost">코스 보기</a>
+    </div>
+  </div>
+
+  <div class="hero-pager">
+    <span class="hero-pager-current" id="pagerCurrent">1</span>
+    <span class="hero-pager-bar"><span id="pagerBar"></span></span>
+    <span class="hero-pager-total">3</span>
+  </div>
+
+  <button class="scroll-down" id="scrollDown" aria-label="아래로 스크롤">
+    <span></span>SCROLL
+  </button>
+</section>
+
+<!-- Notice bar -->
+<section class="notice">
+  <div class="notice-inner">
+    <span class="notice-tag">NOTICE</span>
+    <p>2026년 9월 평일 그린피 특가 안내 · 9/14(월) ~ 9/30(수) 라운딩 예약 시 적용</p>
+    <a href="#reserve">자세히 보기 →</a>
+  </div>
+</section>
+
+<!-- Course intro -->
+<section class="course" id="course">
+  <div class="section-head">
+    <p class="section-eyebrow">COURSE</p>
+    <h2>도심 속에서 즐기는<br>완성도 높은 파3 코스</h2>
+    <p class="section-desc">9홀, 파27 규모의 컴팩트한 구성 안에 벙커·워터해저드·그린 난이도를<br>다채롭게 배치해 짧은 시간에도 진짜 골프의 손맛을 즐길 수 있습니다.</p>
+  </div>
+
+  <div class="course-grid">
+    <article class="course-card">
+      <div class="course-card-img" style="background-image:url('https://loremflickr.com/1200/800/golfcourse?lock=101')"></div>
+      <h3>Hole 1-3 &middot; Water Course</h3>
+      <p>워터해저드를 가로지르는 티샷의 긴장감을 즐길 수 있는 구간입니다.</p>
+    </article>
+    <article class="course-card">
+      <div class="course-card-img" style="background-image:url('https://loremflickr.com/1200/800/golfcourse?lock=102')"></div>
+      <h3>Hole 4-6 &middot; Bunker Course</h3>
+      <p>정교한 그린 공략이 필요한 벙커 지형 중심 구간입니다.</p>
+    </article>
+    <article class="course-card">
+      <div class="course-card-img" style="background-image:url('https://loremflickr.com/1200/800/golfcourse?lock=103')"></div>
+      <h3>Hole 7-9 &middot; Sunset Course</h3>
+      <p>노을을 배경으로 라운딩을 마무리하는 시그니처 구간입니다.</p>
+    </article>
+  </div>
+</section>
+
+<!-- Reservation -->
+<section class="reserve" id="reserve">
+  <div class="section-head">
+    <p class="section-eyebrow">RESERVATION</p>
+    <h2>파3 라운딩 예약</h2>
+    <p class="section-desc">원하는 날짜와 시간을 선택하고 간편하게 예약하세요.</p>
+  </div>
+
+  <form class="reserve-form" id="reserveForm" novalidate>
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="rDate">날짜</label>
+        <input type="date" id="rDate" name="date" required>
+      </div>
+      <div class="form-field">
+        <label for="rTime">시간</label>
+        <select id="rTime" name="time" required>
+          <option value="">시간 선택</option>
+          <option value="06:00">06:00</option>
+          <option value="07:00">07:00</option>
+          <option value="08:00">08:00</option>
+          <option value="09:00">09:00</option>
+          <option value="13:00">13:00</option>
+          <option value="14:00">14:00</option>
+          <option value="15:00">15:00</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="rPeople">인원</label>
+        <select id="rPeople" name="people" required>
+          <option value="">인원 선택</option>
+          <option value="1">1인</option>
+          <option value="2">2인</option>
+          <option value="3">3인</option>
+          <option value="4">4인</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="rName">예약자명</label>
+        <input type="text" id="rName" name="name" placeholder="이름을 입력하세요" required>
+      </div>
+      <div class="form-field">
+        <label for="rPhone">연락처</label>
+        <input type="tel" id="rPhone" name="phone" placeholder="010-0000-0000" required>
+      </div>
+      <div class="form-field">
+        <label for="rRequest">요청사항</label>
+        <input type="text" id="rRequest" name="request" placeholder="선택 입력">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-solid form-submit">예약 신청하기</button>
+    <p class="form-note">예약 신청 후 담당자 확인을 거쳐 SMS로 최종 안내드립니다.</p>
+  </form>
+
+  <div class="reserve-confirm" id="reserveConfirm">
+    <div class="reserve-confirm-box">
+      <span class="reserve-confirm-icon">&#10003;</span>
+      <h3>예약 신청이 완료되었습니다</h3>
+      <p id="confirmSummary"></p>
+      <button type="button" class="btn btn-outline" id="confirmClose">닫기</button>
+    </div>
+  </div>
+</section>
+
+<!-- Location / Footer -->
+<footer class="footer" id="location">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo-main">Par<em>3</em></span>
+      <span class="logo-sub">GOLF CLUB</span>
+    </div>
+    <div class="footer-info">
+      <p>경기도 포천시 영중면 파3로 27 · 대표 010-0000-0000</p>
+      <p>사업자등록번호 000-00-00000 · 대표자 홍길동</p>
+      <p>운영시간 06:00 - 18:00 (연중무휴)</p>
+    </div>
+    <div class="footer-links">
+      <a href="#course">코스안내</a>
+      <a href="#reserve">예약안내</a>
+    </div>
+  </div>
+  <p class="footer-copy">&copy; 2026 PAR3 GOLF CLUB. All rights reserved.</p>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
