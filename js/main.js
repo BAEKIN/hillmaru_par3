@@ -42,70 +42,9 @@ document.getElementById('scrollDown').addEventListener('click', () => {
 });
 
 /* =========================================================
-   예약 시스템 (요구사항 명세서 FR-01 ~ FR-07 기준)
+   예약 등록 폼 (요구사항 명세서 FR-01 / FR-02)
+   데이터 레이어(STORAGE_KEY, ALL_SLOTS, getReservations 등)는 js/data.js
    ========================================================= */
-
-// ---- 비즈니스 규칙 (명세서 2.2 / 6장) ----
-const STORAGE_KEY = 'par3_reservations';
-const START_HOUR = 6;    // 영업 시작 06:00
-const END_HOUR = 18;     // 영업 종료 18:00
-const INTERVAL_MIN = 20; // 슬롯 간격 20분
-
-// ---- 유틸 ----
-function todayStr() {
-  return new Date().toISOString().split('T')[0];
-}
-
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = String(str ?? '');
-  return div.innerHTML;
-}
-
-// 06:00 ~ 17:40, 20분 간격 슬롯 목록 생성 (BR-04)
-function generateSlots() {
-  const slots = [];
-  const totalMin = (END_HOUR - START_HOUR) * 60;
-  for (let m = 0; m < totalMin; m += INTERVAL_MIN) {
-    const h = START_HOUR + Math.floor(m / 60);
-    const mm = m % 60;
-    slots.push(`${String(h).padStart(2, '0')}:${String(mm).padStart(2, '0')}`);
-  }
-  return slots;
-}
-const ALL_SLOTS = generateSlots();
-
-// ---- 데이터 레이어 (localStorage) ----
-function getReservations() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch (e) {
-    console.error('예약 데이터를 불러오지 못했습니다.', e);
-    return [];
-  }
-}
-
-function saveReservations(list) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-}
-
-function isSlotBooked(date, time, list) {
-  return list.some(r => r.date === date && r.time === time);
-}
-
-function sortReservations(list) {
-  return [...list].sort((a, b) => {
-    if (a.date !== b.date) return a.date < b.date ? -1 : 1;
-    return a.time < b.time ? -1 : a.time > b.time ? 1 : 0;
-  });
-}
-
-function createReservationId() {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-}
-
-// ---- FR-01 / FR-02: 예약 폼 ----
 const reserveForm = document.getElementById('reserveForm');
 const reserveConfirm = document.getElementById('reserveConfirm');
 const confirmSummary = document.getElementById('confirmSummary');
@@ -225,120 +164,11 @@ reserveForm.addEventListener('submit', (e) => {
     `${name}님, ${date} ${time}\n${players}인 라운딩 예약이 접수되었습니다.\n담당자 확인 후 SMS로 안내드리겠습니다.`;
   reserveConfirm.classList.add('is-open');
 
-  // 5. 타임테이블 / 목록 / 시간옵션 즉시 갱신
+  // 5. 시간옵션 즉시 갱신 (타임테이블/목록은 관리자 페이지에서 확인)
   renderTimeOptions();
-  renderTimetable();
-  renderList();
 });
 
 confirmClose.addEventListener('click', () => reserveConfirm.classList.remove('is-open'));
 reserveConfirm.addEventListener('click', (e) => {
   if (e.target === reserveConfirm) reserveConfirm.classList.remove('is-open');
 });
-
-// ---- FR-03: 일자별 타임테이블 조회 ----
-const ttDateInput = document.getElementById('ttDate');
-const timetableGrid = document.getElementById('timetableGrid');
-
-ttDateInput.setAttribute('min', todayStr());
-ttDateInput.value = todayStr();
-
-function renderTimetable() {
-  const date = ttDateInput.value || todayStr();
-  const list = getReservations().filter(r => r.date === date);
-  const byTime = {};
-  list.forEach(r => { byTime[r.time] = r; });
-
-  timetableGrid.innerHTML = '';
-  ALL_SLOTS.forEach(slot => {
-    const booked = byTime[slot];
-    const cell = document.createElement('div');
-    cell.className = `tt-slot ${booked ? 'is-booked' : 'is-available'}`;
-    cell.innerHTML = `
-      <div class="tt-slot-time">${slot}</div>
-      <div class="tt-slot-status">${booked ? escapeHtml(booked.name) : '예약 가능'}</div>
-    `;
-    timetableGrid.appendChild(cell);
-  });
-}
-ttDateInput.addEventListener('change', renderTimetable);
-renderTimetable();
-
-// ---- FR-04 / FR-05 / FR-06: 전체 예약 목록, 검색, 취소 ----
-const reserveTableBody = document.getElementById('reserveTableBody');
-const emptyState = document.getElementById('emptyState');
-const searchInput = document.getElementById('searchInput');
-const reserveTable = document.getElementById('reserveTable');
-
-function renderList() {
-  const keyword = (searchInput.value || '').trim().toLowerCase();
-  let list = sortReservations(getReservations());
-
-  if (keyword) {
-    list = list.filter(r =>
-      r.name.toLowerCase().includes(keyword) ||
-      r.phone.toLowerCase().includes(keyword)
-    );
-  }
-
-  if (list.length === 0) {
-    reserveTable.hidden = true;
-    emptyState.hidden = false;
-    reserveTableBody.innerHTML = '';
-    return;
-  }
-
-  reserveTable.hidden = false;
-  emptyState.hidden = true;
-
-  reserveTableBody.innerHTML = list.map(r => `
-    <tr data-id="${escapeHtml(r.id)}">
-      <td>${escapeHtml(r.date)}</td>
-      <td>${escapeHtml(r.time)}</td>
-      <td>${escapeHtml(r.name)}</td>
-      <td>${escapeHtml(r.phone)}</td>
-      <td>${escapeHtml(r.players)}인</td>
-      <td class="memo-cell">${r.memo ? escapeHtml(r.memo) : '-'}</td>
-      <td><button type="button" class="cancel-btn" data-id="${escapeHtml(r.id)}">취소</button></td>
-    </tr>
-  `).join('');
-}
-searchInput.addEventListener('input', renderList);
-
-reserveTableBody.addEventListener('click', (e) => {
-  const btn = e.target.closest('.cancel-btn');
-  if (!btn) return;
-
-  const id = btn.dataset.id;
-  const list = getReservations();
-  const target = list.find(r => r.id === id);
-  if (!target) return;
-
-  const ok = confirm(`${target.date} ${target.time} / ${target.name}님의 예약을 취소하시겠습니까?`);
-  if (!ok) return;
-
-  saveReservations(list.filter(r => r.id !== id));
-  renderTimeOptions();
-  renderTimetable();
-  renderList();
-});
-
-renderList();
-
-// ---- 타임테이블 / 목록 탭 전환 ----
-const tabTimetableBtn = document.getElementById('tabTimetableBtn');
-const tabListBtn = document.getElementById('tabListBtn');
-const timetablePanel = document.getElementById('timetablePanel');
-const listPanel = document.getElementById('listPanel');
-
-function switchTab(tab) {
-  const showTimetable = tab === 'timetable';
-  timetablePanel.hidden = !showTimetable;
-  listPanel.hidden = showTimetable;
-  tabTimetableBtn.classList.toggle('is-active', showTimetable);
-  tabListBtn.classList.toggle('is-active', !showTimetable);
-  tabTimetableBtn.setAttribute('aria-selected', String(showTimetable));
-  tabListBtn.setAttribute('aria-selected', String(!showTimetable));
-}
-tabTimetableBtn.addEventListener('click', () => switchTab('timetable'));
-tabListBtn.addEventListener('click', () => switchTab('list'));

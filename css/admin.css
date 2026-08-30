@@ -1,0 +1,111 @@
+/* ---------- Admin page ---------- */
+.admin-body {
+  background: var(--color-dark);
+  min-height: 100vh;
+}
+
+/* Login gate */
+.admin-gate {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+/* [hidden]이 .admin-gate{display:flex}보다 우선하도록 명시
+   (그렇지 않으면 hidden 속성을 줘도 계속 flex로 보임) */
+.admin-gate[hidden] { display: none; }
+.admin-gate-box {
+  width: 100%;
+  max-width: 380px;
+  background: var(--color-bg);
+  border-radius: 4px;
+  padding: 48px 36px;
+  text-align: center;
+}
+.admin-gate-logo {
+  color: var(--color-dark);
+  font-size: 34px;
+}
+.admin-gate-sub {
+  margin-top: 6px;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  color: var(--color-gold);
+}
+.admin-gate-desc {
+  margin: 20px 0 24px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-text-light);
+}
+.admin-gate-box input {
+  width: 100%;
+  border: 1px solid #ddd6c5;
+  padding: 13px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  border-radius: 2px;
+  background: var(--color-white);
+  color: var(--color-text);
+  text-align: center;
+}
+.admin-gate-box input:focus { outline: none; border-color: var(--color-green); }
+.admin-gate-error {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #9a4331;
+}
+.admin-gate-submit {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+}
+.admin-gate-back {
+  display: inline-block;
+  margin-top: 22px;
+  font-size: 12px;
+  color: var(--color-text-light);
+}
+.admin-gate-back:hover { color: var(--color-green); }
+
+/* Admin content */
+.admin-content { background: var(--color-bg); min-height: 100vh; }
+.admin-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 28px;
+  background: var(--color-dark);
+  color: var(--color-white);
+}
+.admin-header .logo-main { font-size: 24px; color: var(--color-white); }
+.admin-header-title {
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.75);
+  border-left: 1px solid rgba(255,255,255,0.25);
+  padding-left: 16px;
+}
+.admin-header-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+.admin-nav-btn, .admin-logout-btn {
+  padding: 9px 20px;
+  font-size: 13px;
+}
+.btn-ghost-dark {
+  border: 1px solid rgba(255,255,255,0.4);
+  color: var(--color-white);
+}
+.btn-ghost-dark:hover { background: rgba(255,255,255,0.1); }
+
+.admin-main { padding-top: 56px; }
+
+@media (max-width: 520px) {
+  .admin-header { flex-wrap: wrap; padding: 16px 18px; }
+  .admin-header-title { border-left: none; padding-left: 0; width: 100%; }
+  .admin-header-actions { margin-left: 0; }
+}
