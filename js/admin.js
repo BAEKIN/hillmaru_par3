@@ -36,11 +36,30 @@ function renderTimetable() {
     cell.innerHTML = `
       <div class="tt-slot-time">${slot}</div>
       <div class="tt-slot-status">${booked ? escapeHtml(booked.name) : '예약 가능'}</div>
+      ${booked ? `<button type="button" class="tt-cancel-btn" data-id="${escapeHtml(booked.id)}">취소</button>` : ''}
     `;
     timetableGrid.appendChild(cell);
   });
 }
 ttDateInput.addEventListener('change', renderTimetable);
+
+// 타임테이블에서 바로 취소 (예약된 슬롯 카드의 "취소" 버튼)
+timetableGrid.addEventListener('click', (e) => {
+  const btn = e.target.closest('.tt-cancel-btn');
+  if (!btn) return;
+
+  const id = btn.dataset.id;
+  const list = getReservations();
+  const target = list.find(r => r.id === id);
+  if (!target) return;
+
+  const ok = confirm(`${target.date} ${target.time} / ${target.name}님의 예약을 취소하시겠습니까?`);
+  if (!ok) return;
+
+  saveReservations(list.filter(r => r.id !== id));
+  renderTimetable();
+  renderList();
+});
 
 /* ---- FR-04 / FR-05 / FR-06: 전체 예약 목록, 검색, 취소 ---- */
 const reserveTableBody = document.getElementById('reserveTableBody');

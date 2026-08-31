@@ -172,3 +172,81 @@ confirmClose.addEventListener('click', () => reserveConfirm.classList.remove('is
 reserveConfirm.addEventListener('click', (e) => {
   if (e.target === reserveConfirm) reserveConfirm.classList.remove('is-open');
 });
+
+/* =========================================================
+   내 예약 조회 / 취소 (예약자명 + 연락처로 본인 예약만 조회)
+   ========================================================= */
+const myReserveForm = document.getElementById('myReserveForm');
+const myNameInput = document.getElementById('myName');
+const myPhoneInput = document.getElementById('myPhone');
+const myReserveMessage = document.getElementById('myReserveMessage');
+const myReserveResults = document.getElementById('myReserveResults');
+
+myPhoneInput.addEventListener('input', () => {
+  let v = myPhoneInput.value.replace(/[^0-9]/g, '').slice(0, 11);
+  if (v.length > 3 && v.length <= 7) v = `${v.slice(0,3)}-${v.slice(3)}`;
+  else if (v.length > 7) v = `${v.slice(0,3)}-${v.slice(3,7)}-${v.slice(7)}`;
+  myPhoneInput.value = v;
+});
+
+function showMyReserveMessage(text, type) {
+  myReserveMessage.textContent = text;
+  myReserveMessage.className = `my-reserve-message is-visible is-${type}`;
+}
+function clearMyReserveMessage() {
+  myReserveMessage.textContent = '';
+  myReserveMessage.className = 'my-reserve-message';
+}
+
+function renderMyReserveResults() {
+  const name = myNameInput.value.trim();
+  const phone = myPhoneInput.value.trim();
+  myReserveResults.innerHTML = '';
+  clearMyReserveMessage();
+
+  if (!name || !phone) {
+    showMyReserveMessage('예약자명과 연락처를 모두 입력해주세요.', 'error');
+    return;
+  }
+
+  const matched = sortReservations(
+    getReservations().filter(r => r.name === name && r.phone === phone)
+  );
+
+  if (matched.length === 0) {
+    showMyReserveMessage('일치하는 예약 내역이 없습니다.', 'empty');
+    return;
+  }
+
+  myReserveResults.innerHTML = matched.map(r => `
+    <div class="my-reserve-card" data-id="${escapeHtml(r.id)}">
+      <div class="my-reserve-card-info">
+        <b>${escapeHtml(r.date)} ${escapeHtml(r.time)}</b>
+        <span>${escapeHtml(r.players)}인 ${r.memo ? '· ' + escapeHtml(r.memo) : ''}</span>
+      </div>
+      <button type="button" class="cancel-btn my-cancel-btn" data-id="${escapeHtml(r.id)}">예약 취소</button>
+    </div>
+  `).join('');
+}
+
+myReserveForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  renderMyReserveResults();
+});
+
+myReserveResults.addEventListener('click', (e) => {
+  const btn = e.target.closest('.my-cancel-btn');
+  if (!btn) return;
+
+  const id = btn.dataset.id;
+  const list = getReservations();
+  const target = list.find(r => r.id === id);
+  if (!target) return;
+
+  const ok = confirm(`${target.date} ${target.time} / ${target.name}님의 예약을 취소하시겠습니까?`);
+  if (!ok) return;
+
+  saveReservations(list.filter(r => r.id !== id));
+  renderTimeOptions();
+  renderMyReserveResults();
+});

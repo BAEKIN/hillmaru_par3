@@ -381,6 +381,136 @@ img { max-width: 100%; display: block; }
   line-height: 1.7;
 }
 
+/* ---------- Course map ---------- */
+.course-map-block {
+  max-width: 1000px;
+  margin: 80px auto 0;
+}
+.course-map-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  color: var(--color-dark);
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.course-yardage-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 24px;
+  font-size: 14px;
+  min-width: 640px;
+}
+.course-yardage-table th, .course-yardage-table td {
+  padding: 12px 14px;
+  text-align: center;
+  border: 1px solid #e8e3d8;
+}
+.course-yardage-table th {
+  background: var(--color-dark);
+  color: var(--color-white);
+  font-weight: 500;
+  font-size: 13px;
+}
+.course-yardage-table td:first-child {
+  background: var(--color-cream);
+  font-weight: 500;
+  color: var(--color-text-light);
+}
+.course-yardage-table td b { color: var(--color-green); }
+
+.course-map-image {
+  margin-top: 32px;
+  background: var(--color-white);
+  border: 1px solid #e8e3d8;
+  border-radius: 4px;
+  padding: 16px;
+}
+.course-map-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+}
+
+/* ---------- Guide ---------- */
+.guide { padding: 120px 20px; max-width: 900px; margin: 0 auto; }
+.guide-body { display: flex; flex-direction: column; gap: 44px; }
+.guide-block {
+  background: var(--color-white);
+  border: 1px solid #e8e3d8;
+  border-radius: 4px;
+  padding: 32px 36px;
+}
+.guide-block h3 {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--color-dark);
+  margin-bottom: 16px;
+}
+.guide-highlight {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  color: var(--color-green);
+}
+.guide-highlight span {
+  display: inline-block;
+  margin-left: 10px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--color-text-light);
+}
+.guide-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 360px; }
+.guide-table th, .guide-table td {
+  padding: 12px 10px;
+  text-align: center;
+  border-bottom: 1px solid #eee7d9;
+}
+.guide-table th { color: var(--color-text-light); font-weight: 500; font-size: 12px; }
+.guide-note { margin-top: 14px; font-size: 13px; color: var(--color-text-light); }
+
+.guide-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  list-style: none;
+}
+.guide-steps li {
+  flex: 1 1 140px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--color-bg);
+  border-radius: 4px;
+  font-size: 14px;
+  color: var(--color-text);
+}
+.guide-steps li span {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--color-gold);
+}
+
+.guide-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.guide-list li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--color-text-light);
+}
+.guide-list li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 9px;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--color-gold);
+}
+
+.guide-block-contact { text-align: center; }
+.guide-phone { letter-spacing: 0.05em; }
+
 /* ---------- Reserve ---------- */
 .reserve { padding: 120px 20px; max-width: 800px; margin: 0 auto; position: relative; }
 .reserve-form {
@@ -446,6 +576,74 @@ img { max-width: 100%; display: block; }
   color: var(--color-green);
   border: 1px solid #c9dcc9;
 }
+
+/* ---------- My Reserve (본인 예약 조회/취소) ---------- */
+.my-reserve {
+  max-width: 800px;
+  margin: 56px auto 0;
+  padding: 36px;
+  background: var(--color-white);
+  border: 1px solid #e8e3d8;
+  border-radius: 4px;
+}
+.my-reserve h3 {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--color-dark);
+  margin-bottom: 10px;
+  text-align: center;
+}
+.my-reserve-desc {
+  font-size: 13px;
+  color: var(--color-text-light);
+  text-align: center;
+  margin-bottom: 24px;
+}
+.my-reserve-form {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.my-reserve-form input {
+  flex: 1 1 180px;
+  border: 1px solid #ddd6c5;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  border-radius: 2px;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+.my-reserve-form input:focus { outline: none; border-color: var(--color-green); }
+.my-reserve-form .btn { flex: 0 0 auto; padding: 12px 24px; }
+
+.my-reserve-message {
+  display: none;
+  margin-top: 18px;
+  padding: 12px 16px;
+  font-size: 13px;
+  border-radius: 2px;
+  text-align: center;
+}
+.my-reserve-message.is-visible { display: block; }
+.my-reserve-message.is-error { background: #fbeae5; color: #9a4331; border: 1px solid #e6c3b6; }
+.my-reserve-message.is-empty { background: #f1f0eb; color: var(--color-text-light); border: 1px solid #e8e3d8; }
+
+.my-reserve-results { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+.my-reserve-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  background: var(--color-bg);
+  border: 1px solid #e8e3d8;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.my-reserve-card-info b { font-family: var(--font-serif); font-size: 17px; color: var(--color-dark); margin-right: 10px; }
+.my-reserve-card-info span { color: var(--color-text-light); font-size: 13px; }
 
 .reserve-confirm {
   position: fixed;
@@ -574,7 +772,16 @@ img { max-width: 100%; display: block; }
 .tt-slot.is-available { border-color: #c9dcc9; background: #f3f8f3; }
 .tt-slot.is-available .tt-slot-status { color: var(--color-green); }
 .tt-slot.is-booked { background: #f1f0eb; }
-.tt-slot.is-booked .tt-slot-status { color: #9a8f7a; }
+.tt-slot.is-booked .tt-slot-status { color: #9a8f7a; margin-bottom: 8px; }
+.tt-cancel-btn {
+  font-size: 11px;
+  color: #9a4331;
+  border: 1px solid #e6c3b6;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--color-white);
+}
+.tt-cancel-btn:hover { background: #fbeae5; }
 
 .table-wrap { overflow-x: auto; }
 .reserve-table {
