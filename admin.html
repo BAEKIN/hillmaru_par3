@@ -47,6 +47,7 @@
     <div class="status-tabs" role="tablist">
       <button type="button" class="tab-btn is-active" id="tabTimetableBtn" role="tab" aria-selected="true">타임테이블</button>
       <button type="button" class="tab-btn" id="tabListBtn" role="tab" aria-selected="false">전체 예약 목록</button>
+      <button type="button" class="tab-btn" id="tabHistoryBtn" role="tab" aria-selected="false">히스토리</button>
     </div>
 
     <div class="status-panel" id="timetablePanel">
@@ -73,6 +74,24 @@
         </table>
       </div>
       <p class="empty-state" id="emptyState" hidden>예약 내역이 없습니다.</p>
+    </div>
+
+    <div class="status-panel" id="historyPanel" hidden>
+      <div class="status-panel-head">
+        <label for="historySearchInput" class="sr-only">이름 또는 연락처 검색</label>
+        <input type="text" id="historySearchInput" placeholder="이름 또는 연락처로 검색">
+      </div>
+      <div class="table-wrap">
+        <table class="reserve-table" id="historyTable">
+          <thead>
+            <tr>
+              <th>처리일시</th><th>구분</th><th>날짜</th><th>시간</th><th>이름</th><th>연락처</th><th>인원</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody"></tbody>
+        </table>
+      </div>
+      <p class="empty-state" id="historyEmptyState" hidden>히스토리가 없습니다.</p>
     </div>
   </main>
 </div>

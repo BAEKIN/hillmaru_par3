@@ -57,8 +57,10 @@ timetableGrid.addEventListener('click', (e) => {
   if (!ok) return;
 
   saveReservations(list.filter(r => r.id !== id));
+  addHistoryEntry(target, 'cancelled');
   renderTimetable();
   renderList();
+  renderHistory();
 });
 
 /* ---- FR-04 / FR-05 / FR-06: 전체 예약 목록, 검색, 취소 ---- */
@@ -115,27 +117,77 @@ reserveTableBody.addEventListener('click', (e) => {
   if (!ok) return;
 
   saveReservations(list.filter(r => r.id !== id));
+  addHistoryEntry(target, 'cancelled');
   renderTimetable();
   renderList();
+  renderHistory();
 });
 
-/* ---- 타임테이블 / 목록 탭 전환 ---- */
+/* ---- 예약 히스토리 조회 (생성/취소 이력, 명세서 9장 FE-10) ---- */
+const historyTableBody = document.getElementById('historyTableBody');
+const historyEmptyState = document.getElementById('historyEmptyState');
+const historyTable = document.getElementById('historyTable');
+const historySearchInput = document.getElementById('historySearchInput');
+
+const ACTION_LABEL = { created: '생성', cancelled: '취소' };
+
+function renderHistory() {
+  const keyword = (historySearchInput.value || '').trim().toLowerCase();
+  let list = sortHistory(getHistory());
+
+  if (keyword) {
+    list = list.filter(h =>
+      h.name.toLowerCase().includes(keyword) ||
+      h.phone.toLowerCase().includes(keyword)
+    );
+  }
+
+  if (list.length === 0) {
+    historyTable.hidden = true;
+    historyEmptyState.hidden = false;
+    historyTableBody.innerHTML = '';
+    return;
+  }
+
+  historyTable.hidden = false;
+  historyEmptyState.hidden = true;
+
+  historyTableBody.innerHTML = list.map(h => `
+    <tr>
+      <td>${escapeHtml(h.actionAt.replace('T', ' ').slice(0, 16))}</td>
+      <td><span class="history-badge is-${h.action}">${ACTION_LABEL[h.action] || h.action}</span></td>
+      <td>${escapeHtml(h.date)}</td>
+      <td>${escapeHtml(h.time)}</td>
+      <td>${escapeHtml(h.name)}</td>
+      <td>${escapeHtml(h.phone)}</td>
+      <td>${escapeHtml(h.players)}인</td>
+    </tr>
+  `).join('');
+}
+historySearchInput.addEventListener('input', renderHistory);
+
+/* ---- 타임테이블 / 목록 / 히스토리 탭 전환 ---- */
 const tabTimetableBtn = document.getElementById('tabTimetableBtn');
 const tabListBtn = document.getElementById('tabListBtn');
+const tabHistoryBtn = document.getElementById('tabHistoryBtn');
 const timetablePanel = document.getElementById('timetablePanel');
 const listPanel = document.getElementById('listPanel');
+const historyPanel = document.getElementById('historyPanel');
+
+const TAB_BUTTONS = { timetable: tabTimetableBtn, list: tabListBtn, history: tabHistoryBtn };
+const TAB_PANELS = { timetable: timetablePanel, list: listPanel, history: historyPanel };
 
 function switchTab(tab) {
-  const showTimetable = tab === 'timetable';
-  timetablePanel.hidden = !showTimetable;
-  listPanel.hidden = showTimetable;
-  tabTimetableBtn.classList.toggle('is-active', showTimetable);
-  tabListBtn.classList.toggle('is-active', !showTimetable);
-  tabTimetableBtn.setAttribute('aria-selected', String(showTimetable));
-  tabListBtn.setAttribute('aria-selected', String(!showTimetable));
+  Object.keys(TAB_PANELS).forEach(key => {
+    const isActive = key === tab;
+    TAB_PANELS[key].hidden = !isActive;
+    TAB_BUTTONS[key].classList.toggle('is-active', isActive);
+    TAB_BUTTONS[key].setAttribute('aria-selected', String(isActive));
+  });
 }
 tabTimetableBtn.addEventListener('click', () => switchTab('timetable'));
 tabListBtn.addEventListener('click', () => switchTab('list'));
+tabHistoryBtn.addEventListener('click', () => switchTab('history'));
 
 /* ---- 로그인 게이트 ----
    주의: showAdminContent()가 renderTimetable()/renderList()를 호출하므로,
@@ -146,6 +198,7 @@ function showAdminContent() {
   adminContent.hidden = false;
   renderTimetable();
   renderList();
+  renderHistory();
 }
 
 function showGate() {
@@ -179,6 +232,7 @@ window.addEventListener('pageshow', () => {
   if (!adminContent.hidden) {
     renderTimetable();
     renderList();
+    renderHistory();
   }
 });
 

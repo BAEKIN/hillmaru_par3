@@ -149,6 +149,7 @@ reserveForm.addEventListener('submit', (e) => {
   };
   list.push(reservation);
   saveReservations(list);
+  addHistoryEntry(reservation, 'created');
 
   // 4. 성공 메시지 + 폼 초기화 (날짜·인원수는 유지)
   const successText = `${date} ${time} 예약이 완료되었습니다.`;
@@ -247,6 +248,7 @@ myReserveResults.addEventListener('click', (e) => {
   if (!ok) return;
 
   saveReservations(list.filter(r => r.id !== id));
+  addHistoryEntry(target, 'cancelled');
   renderTimeOptions();
   renderMyReserveResults();
 });

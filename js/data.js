@@ -4,9 +4,9 @@
    ========================================================= */
 
 const STORAGE_KEY = 'par3_reservations';
-const START_HOUR = 6;    // 영업 시작 06:00
-const END_HOUR = 18;     // 영업 종료 18:00
-const INTERVAL_MIN = 20; // 슬롯 간격 20분
+const START_HOUR = 9;    // 영업 시작 06:00
+const END_HOUR = 17;     // 영업 종료 17:00
+const INTERVAL_MIN = 10; // 슬롯 간격 10분
 
 function todayStr() {
   return new Date().toISOString().split('T')[0];
@@ -18,10 +18,10 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-// 06:00 ~ 17:40, 20분 간격 슬롯 목록 생성 (BR-04)
+// 09:00 ~ 16:30, 10분 간격 슬롯 목록 생성 (BR-04)
 function generateSlots() {
   const slots = [];
-  const totalMin = (END_HOUR - START_HOUR) * 60;
+  const totalMin = (END_HOUR - START_HOUR) * 60-20;
   for (let m = 0; m < totalMin; m += INTERVAL_MIN) {
     const h = START_HOUR + Math.floor(m / 60);
     const mm = m % 60;
@@ -58,4 +58,36 @@ function sortReservations(list) {
 
 function createReservationId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+/* ---- 예약 히스토리 (생성/취소 이력, 명세서 9장 FE-10 감사 로그) ---- */
+const HISTORY_KEY = 'par3_reservation_history';
+
+function getHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    console.error('예약 히스토리를 불러오지 못했습니다.', e);
+    return [];
+  }
+}
+
+function saveHistory(list) {
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+}
+
+// action: 'created' | 'cancelled'
+function addHistoryEntry(reservation, action) {
+  const history = getHistory();
+  history.push({
+    ...reservation,
+    action,
+    actionAt: new Date().toISOString()
+  });
+  saveHistory(history);
+}
+
+function sortHistory(list) {
+  return [...list].sort((a, b) => (a.actionAt < b.actionAt ? 1 : -1)); // 최신순
 }

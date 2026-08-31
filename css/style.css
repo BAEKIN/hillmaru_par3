@@ -818,6 +818,16 @@ img { max-width: 100%; display: block; }
   color: var(--color-text-light);
 }
 
+.history-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.history-badge.is-created { background: #eaf1ea; color: var(--color-green); }
+.history-badge.is-cancelled { background: #fbeae5; color: #9a4331; }
+
 /* ---------- Footer ---------- */
 .footer { background: var(--color-dark); color: rgba(255,255,255,0.75); padding: 64px 20px 24px; }
 .footer-inner {
