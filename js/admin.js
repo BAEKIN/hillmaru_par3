@@ -20,7 +20,7 @@ const ttDateInput = document.getElementById('ttDate');
 const timetableTableBody = document.getElementById('timetableTableBody');
 const timetableSubtotal = document.getElementById('timetableSubtotal');
 
-ttDateInput.setAttribute('min', todayStr());
+// 관리자는 지난 날짜의 예약 시트도 조회할 수 있어야 하므로 min을 걸지 않는다.
 ttDateInput.value = todayStr();
 
 function renderTimetable() {

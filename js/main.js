@@ -73,17 +73,28 @@ function renderTimeOptions() {
   const list = getReservations();
   const prevValue = timeSelect.value;
 
+  // 마감(이미 예약됐거나 지난 시간)된 슬롯은 목록에서 아예 제외한다.
+  const openSlots = ALL_SLOTS.filter(
+    slot => !isSlotBooked(date, slot, list) && !isSlotPast(date, slot)
+  );
+
   timeSelect.innerHTML = '<option value="">시간 선택</option>';
-  ALL_SLOTS.forEach(slot => {
-    const booked = isSlotBooked(date, slot, list);
+  openSlots.forEach(slot => {
     const opt = document.createElement('option');
     opt.value = slot;
-    opt.textContent = booked ? `${slot} (마감)` : slot;
-    if (booked) opt.disabled = true;
+    opt.textContent = slot;
     timeSelect.appendChild(opt);
   });
 
-  if (prevValue && !isSlotBooked(date, prevValue, list)) {
+  if (openSlots.length === 0) {
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.textContent = '예약 가능한 시간이 없습니다';
+    opt.disabled = true;
+    timeSelect.appendChild(opt);
+  }
+
+  if (prevValue && openSlots.includes(prevValue)) {
     timeSelect.value = prevValue;
   }
 }
@@ -130,7 +141,15 @@ reserveForm.addEventListener('submit', (e) => {
     return;
   }
 
-  // 2. 슬롯 중복 검증
+  // 2. 지난 시간 검증 (당일 현재 시각 이후만 예약 가능)
+  if (isSlotPast(date, time)) {
+    timeSelect.closest('.form-field').classList.add('error');
+    showFormMessage('이미 지난 시간대입니다. 다른 시간을 선택해주세요.', 'error');
+    renderTimeOptions();
+    return;
+  }
+
+  // 3. 슬롯 중복 검증
   const list = getReservations();
   if (isSlotBooked(date, time, list)) {
     timeSelect.closest('.form-field').classList.add('error');
@@ -139,7 +158,7 @@ reserveForm.addEventListener('submit', (e) => {
     return;
   }
 
-  // 3. 저장
+  // 4. 저장
   const reservation = {
     id: createReservationId(),
     date, time, name, phone,
@@ -151,7 +170,7 @@ reserveForm.addEventListener('submit', (e) => {
   saveReservations(list);
   addHistoryEntry(reservation, 'created');
 
-  // 4. 성공 메시지 + 폼 초기화 (날짜·인원수는 유지)
+  // 5. 성공 메시지 + 폼 초기화 (날짜·인원수는 유지)
   const successText = `${date} ${time} 예약이 완료되었습니다.`;
   showFormMessage(successText, 'success');
 
@@ -165,7 +184,7 @@ reserveForm.addEventListener('submit', (e) => {
     `${name}님, ${date} ${time}\n${players}인 라운딩 예약이 접수되었습니다.\n담당자 확인 후 SMS로 안내드리겠습니다.`;
   reserveConfirm.classList.add('is-open');
 
-  // 5. 시간옵션 즉시 갱신 (타임테이블/목록은 관리자 페이지에서 확인)
+  // 6. 시간옵션 즉시 갱신 (타임테이블/목록은 관리자 페이지에서 확인)
   renderTimeOptions();
 });
 

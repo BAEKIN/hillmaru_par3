@@ -4,12 +4,28 @@
    ========================================================= */
 
 const STORAGE_KEY = 'par3_reservations';
-const START_HOUR = 9;    // 영업 시작 06:00
-const END_HOUR = 17;     // 영업 종료 17:00
+const START_HOUR = 9;    // 영업 시작 09:00
+const END_HOUR = 17;     // 마지막 Tee-Off 16:30 (아래 generateSlots에서 -20분)
 const INTERVAL_MIN = 10; // 슬롯 간격 10분
 
 function todayStr() {
-  return new Date().toISOString().split('T')[0];
+  // 로컬(한국) 시간 기준 YYYY-MM-DD. toISOString()은 UTC라
+  // 자정~오전 9시 사이 접속 시 전날로 계산되는 문제가 있어 사용하지 않는다.
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+// 현재 시각을 "HH:MM"로 (당일 지난 슬롯 판별용)
+function nowTimeStr() {
+  const d = new Date();
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
+
+// date(YYYY-MM-DD) + time(HH:MM) 슬롯이 이미 지났는지
+function isSlotPast(date, time) {
+  if (date > todayStr()) return false;
+  if (date < todayStr()) return true;
+  return time <= nowTimeStr();
 }
 
 function escapeHtml(str) {
