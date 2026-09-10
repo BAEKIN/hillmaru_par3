@@ -55,13 +55,33 @@
         <label for="ttDate">조회 날짜</label>
         <input type="date" id="ttDate">
       </div>
-      <div class="timetable-grid" id="timetableGrid"></div>
+      <div class="table-wrap">
+        <table class="reserve-table tt-sheet" id="timetableTable">
+          <thead>
+            <tr>
+              <th class="tt-sheet-no">NO</th>
+              <th>시간</th>
+              <th>예약자명</th>
+              <th>비고</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="timetableTableBody"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5" id="timetableSubtotal">소계 : 0팀</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
 
     <div class="status-panel" id="listPanel" hidden>
       <div class="status-panel-head">
-        <label for="searchInput" class="sr-only">이름 또는 연락처 검색</label>
-        <input type="text" id="searchInput" placeholder="이름 또는 연락처로 검색">
+        <label for="listDateFilter">조회 날짜</label>
+        <input type="date" id="listDateFilter">
+        <label for="searchInput" class="sr-only">이름, 연락처, 요청사항 검색</label>
+        <input type="text" id="searchInput" placeholder="이름, 연락처, 요청사항으로 검색">
       </div>
       <div class="table-wrap">
         <table class="reserve-table" id="reserveTable">

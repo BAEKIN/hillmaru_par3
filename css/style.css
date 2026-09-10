@@ -726,6 +726,7 @@ img { max-width: 100%; display: block; }
 .status-panel-head {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 24px;
 }
@@ -746,42 +747,17 @@ img { max-width: 100%; display: block; }
 }
 .status-panel-head input:focus { outline: none; border-color: var(--color-green); }
 
-.timetable-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: 10px;
-}
-.tt-slot {
-  border: 1px solid #e8e3d8;
-  border-radius: 4px;
-  padding: 12px 8px;
-  text-align: center;
-  background: var(--color-bg);
-}
-.tt-slot-time {
-  font-family: var(--font-serif);
-  font-size: 16px;
+/* 타임테이블 표: 전체 예약 목록(.reserve-table)과 같은 스타일을 쓰고
+   NO 컬럼 너비와 예약된 행 배경, 소계 행만 덧붙인다 */
+.tt-sheet .tt-sheet-no { width: 44px; color: var(--color-text-light); }
+.tt-sheet tbody tr.is-booked { background: #f3f8f3; }
+.tt-sheet tfoot td {
+  text-align: left;
+  font-weight: 500;
   color: var(--color-dark);
-  margin-bottom: 4px;
+  background: var(--color-cream);
+  border-bottom: none;
 }
-.tt-slot-status {
-  font-size: 11px;
-  color: var(--color-text-light);
-  word-break: break-all;
-}
-.tt-slot.is-available { border-color: #c9dcc9; background: #f3f8f3; }
-.tt-slot.is-available .tt-slot-status { color: var(--color-green); }
-.tt-slot.is-booked { background: #f1f0eb; }
-.tt-slot.is-booked .tt-slot-status { color: #9a8f7a; margin-bottom: 8px; }
-.tt-cancel-btn {
-  font-size: 11px;
-  color: #9a4331;
-  border: 1px solid #e6c3b6;
-  padding: 3px 10px;
-  border-radius: 20px;
-  background: var(--color-white);
-}
-.tt-cancel-btn:hover { background: #fbeae5; }
 
 .table-wrap { overflow-x: auto; }
 .reserve-table {
@@ -866,6 +842,5 @@ img { max-width: 100%; display: block; }
   .hero-actions .btn { width: 100%; }
   .notice-inner { flex-direction: column; align-items: flex-start; gap: 8px; }
   .status-panel { padding: 24px 18px; }
-  .timetable-grid { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); }
   .status-tabs { flex-wrap: wrap; }
 }

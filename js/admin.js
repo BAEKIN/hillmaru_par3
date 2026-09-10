@@ -15,9 +15,10 @@ const adminPassword = document.getElementById('adminPassword');
 const adminGateError = document.getElementById('adminGateError');
 const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 
-/* ---- FR-03: 일자별 타임테이블 조회 ---- */
+/* ---- FR-03: 일자별 타임테이블 조회 (예약시트 형태: NO/시간/예약자명/비고) ---- */
 const ttDateInput = document.getElementById('ttDate');
-const timetableGrid = document.getElementById('timetableGrid');
+const timetableTableBody = document.getElementById('timetableTableBody');
+const timetableSubtotal = document.getElementById('timetableSubtotal');
 
 ttDateInput.setAttribute('min', todayStr());
 ttDateInput.value = todayStr();
@@ -28,24 +29,34 @@ function renderTimetable() {
   const byTime = {};
   list.forEach(r => { byTime[r.time] = r; });
 
-  timetableGrid.innerHTML = '';
-  ALL_SLOTS.forEach(slot => {
+  let bookedCount = 0;
+
+  timetableTableBody.innerHTML = ALL_SLOTS.map((slot, i) => {
     const booked = byTime[slot];
-    const cell = document.createElement('div');
-    cell.className = `tt-slot ${booked ? 'is-booked' : 'is-available'}`;
-    cell.innerHTML = `
-      <div class="tt-slot-time">${slot}</div>
-      <div class="tt-slot-status">${booked ? escapeHtml(booked.name) : '예약 가능'}</div>
-      ${booked ? `<button type="button" class="tt-cancel-btn" data-id="${escapeHtml(booked.id)}">취소</button>` : ''}
+    if (booked) bookedCount++;
+
+    const note = booked
+      ? `${escapeHtml(booked.players)}인${booked.memo ? ' · ' + escapeHtml(booked.memo) : ''}`
+      : '';
+
+    return `
+      <tr class="${booked ? 'is-booked' : 'is-available'}">
+        <td class="tt-sheet-no">${i + 1}</td>
+        <td>${slot}</td>
+        <td>${booked ? escapeHtml(booked.name) : ''}</td>
+        <td class="memo-cell">${note}</td>
+        <td>${booked ? `<button type="button" class="cancel-btn" data-id="${escapeHtml(booked.id)}">취소</button>` : ''}</td>
+      </tr>
     `;
-    timetableGrid.appendChild(cell);
-  });
+  }).join('');
+
+  timetableSubtotal.textContent = `소계 : ${bookedCount}팀`;
 }
 ttDateInput.addEventListener('change', renderTimetable);
 
-// 타임테이블에서 바로 취소 (예약된 슬롯 카드의 "취소" 버튼)
-timetableGrid.addEventListener('click', (e) => {
-  const btn = e.target.closest('.tt-cancel-btn');
+// 타임테이블에서 바로 취소 (예약된 행의 "취소" 버튼)
+timetableTableBody.addEventListener('click', (e) => {
+  const btn = e.target.closest('.cancel-btn');
   if (!btn) return;
 
   const id = btn.dataset.id;
@@ -63,20 +74,28 @@ timetableGrid.addEventListener('click', (e) => {
   renderHistory();
 });
 
-/* ---- FR-04 / FR-05 / FR-06: 전체 예약 목록, 검색, 취소 ---- */
+/* ---- FR-04 / FR-05 / FR-06: 전체 예약 목록, 날짜 조회, 검색, 취소 ---- */
 const reserveTableBody = document.getElementById('reserveTableBody');
 const emptyState = document.getElementById('emptyState');
 const searchInput = document.getElementById('searchInput');
 const reserveTable = document.getElementById('reserveTable');
+const listDateFilter = document.getElementById('listDateFilter');
+listDateFilter.value = todayStr();
 
 function renderList() {
   const keyword = (searchInput.value || '').trim().toLowerCase();
+  const dateFilter = listDateFilter.value;
   let list = sortReservations(getReservations());
+
+  if (dateFilter) {
+    list = list.filter(r => r.date === dateFilter);
+  }
 
   if (keyword) {
     list = list.filter(r =>
       r.name.toLowerCase().includes(keyword) ||
-      r.phone.toLowerCase().includes(keyword)
+      r.phone.toLowerCase().includes(keyword) ||
+      (r.memo || '').toLowerCase().includes(keyword)
     );
   }
 
@@ -103,6 +122,7 @@ function renderList() {
   `).join('');
 }
 searchInput.addEventListener('input', renderList);
+listDateFilter.addEventListener('change', renderList);
 
 reserveTableBody.addEventListener('click', (e) => {
   const btn = e.target.closest('.cancel-btn');
